@@ -5,7 +5,7 @@ import ora from "ora";
 import path from "path";
 import chalk from "chalk";
 
-import { links, fileTypeLinks } from "./utils/links.js";
+import { links, fileTypeTemplate, fileTypeLinks } from "./utils/links.js";
 import { loading } from "./utils/index.js";
 import {
   isRemoveExitMatter,
@@ -55,7 +55,7 @@ export async function createFile() {
 
   const { filetype } = await inquirer.prompt(fileType);
 
-  const result = await compile(fileTypeLinks.get(filetype), {
+  const result = await compile(fileTypeTemplate.get(filetype), {
     filename,
     toUpperCase: filename
       .toLowerCase()
@@ -63,12 +63,7 @@ export async function createFile() {
   });
 
   const suffix = fs.existsSync("tsconfig.json") ? "t" : "j";
-  const fileTypeMap = new Map([
-    ["component", [`src/components/${filename}`, `index.${suffix}sx`]],
-    ["page", [`src/pages/${filename}`, `index.${suffix}sx`]],
-    ["redux", [`src/store/modules`, `${filename}.${suffix}s`]],
-    ["axios", [`src/services`, `${filename}.${suffix}s`]],
-  ]);
+  const fileTypeMap = fileTypeLinks(filename, suffix);
 
   const targetPath = path.resolve(
     fileTypeMap.get(filetype)[0],
