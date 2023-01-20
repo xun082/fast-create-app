@@ -18,14 +18,15 @@
   ],
   "author": "moment",
   "license": "MIT",
-  "homepage": "https://github.com/xun082",
+  "homepage": "https://github.com/xun082/fast-create-app",
   "repository": {
     "type": "git",
-    "url": "https://github.com/xun082"
+    "url": "https://github.com/xun082/fast-create-app"
   },
   "dependencies": {
     "chalk": "^5.2.0",
     "commander": "^10.0.0",
+    "ejs": "^3.1.8",
     "figlet": "^1.5.2",
     "fs-extra": "^11.1.0",
     "inquirer": "^9.1.4",

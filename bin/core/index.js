@@ -1,14 +1,14 @@
 import shell from "shelljs";
-import chalk from "chalk";
 import links from "../utils/links.js";
 import fs from "fs-extra";
 import inquirer from "inquirer";
 import ora from "ora";
+import path from "path";
+import chalk from "chalk";
 
-import { loading } from "../utils/loading.js";
-import { isRemoveExitMatter, questions } from "../utils/questions.js";
-
-const path = process.cwd();
+import { loading } from "../utils/index.js";
+import { isRemoveExitMatter, questions, addFile } from "../utils/questions.js";
+import { compile, writeToFile } from "../utils/index.js";
 
 export async function answerHandle(matter) {
   if (fs.existsSync(matter)) {
@@ -32,15 +32,27 @@ export async function answerHandle(matter) {
       "正在远程拉取模板代码,请稍等"
     );
 
-    console.log(chalk.green(`🖨️  Cloned started files into ${matter}`));
-    shell.cd(`${path}/${matter}`);
+    shell.cd(`${process.cwd()}/${matter}`);
     if (answers.install === "yes") {
       loading(`${answers.tool} install`, "正在安装相关依赖,请骚等");
     }
-    console.log(
-      chalk.green(
-        "👨‍💻 Successfully installed all the required dependencies\nHappy hacking 🚀"
-      )
-    );
   });
+}
+
+export async function createFile() {
+  const { filename } = await inquirer.prompt(addFile);
+  const reg = /^[a-z]+$/;
+  if (!reg.test(filename)) {
+    console.log(chalk.redBright("输入文件名格式有误,请重新输入"));
+    process.exit(1);
+  }
+  const result = await compile("component.react-ts.ejs", {
+    filename,
+    toUpperCase: filename
+      .toLowerCase()
+      .replace(/( |^)[a-z]/g, (L) => L.toUpperCase()),
+  });
+
+  const targetPath = path.resolve(`src/components/${filename}`, `index.tsx`);
+  writeToFile(targetPath, result);
 }

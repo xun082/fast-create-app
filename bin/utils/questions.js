@@ -1,6 +1,6 @@
 import { lightGreen, lightRed } from "kolorist";
 
-const questions = [
+export const questions = [
   {
     type: "list",
     name: "framework",
@@ -25,7 +25,7 @@ const questions = [
   },
 ];
 
-const isRemoveExitMatter = [
+export const isRemoveExitMatter = [
   {
     type: "list",
     name: "isRemove",
@@ -34,4 +34,19 @@ const isRemoveExitMatter = [
   },
 ];
 
-export { questions, isRemoveExitMatter };
+export const addFile = [
+  {
+    type: "input",
+    message: "请输入你要创建的文件名",
+    name: "filename",
+  },
+];
+
+export const addFileType = [
+  {
+    type: "list",
+    name: "tool",
+    message: lightGreen("请选择文件的类型:"),
+    choices: ["component", "axios", "redux", "react", "react-ts"],
+  },
+];
