@@ -1,14 +1,19 @@
 import shell from "shelljs";
-import links from "../utils/links.js";
 import fs from "fs-extra";
 import inquirer from "inquirer";
 import ora from "ora";
 import path from "path";
 import chalk from "chalk";
 
-import { loading } from "../utils/index.js";
-import { isRemoveExitMatter, questions, addFile } from "../utils/questions.js";
-import { compile, writeToFile } from "../utils/index.js";
+import { links, fileTypeLinks } from "./utils/links.js";
+import { loading } from "./utils/index.js";
+import {
+  isRemoveExitMatter,
+  questions,
+  addFile,
+  fileType,
+} from "./utils/questions.js";
+import { compile, writeToFile } from "./utils/index.js";
 
 export async function answerHandle(matter) {
   if (fs.existsSync(matter)) {
@@ -41,18 +46,34 @@ export async function answerHandle(matter) {
 
 export async function createFile() {
   const { filename } = await inquirer.prompt(addFile);
+
   const reg = /^[a-z]+$/;
   if (!reg.test(filename)) {
     console.log(chalk.redBright("输入文件名格式有误,请重新输入"));
     process.exit(1);
   }
-  const result = await compile("component.react-ts.ejs", {
+
+  const { filetype } = await inquirer.prompt(fileType);
+
+  const result = await compile(fileTypeLinks.get(filetype), {
     filename,
     toUpperCase: filename
       .toLowerCase()
       .replace(/( |^)[a-z]/g, (L) => L.toUpperCase()),
   });
 
-  const targetPath = path.resolve(`src/components/${filename}`, `index.tsx`);
+  const suffix = fs.existsSync("tsconfig.json") ? "t" : "j";
+  const fileTypeMap = new Map([
+    ["component", [`src/components/${filename}`, `index.${suffix}sx`]],
+    ["page", [`src/pages/${filename}`, `index.${suffix}sx`]],
+    ["redux", [`src/store/modules`, `${filename}.${suffix}s`]],
+    ["axios", [`src/services`, `${filename}.${suffix}s`]],
+  ]);
+
+  const targetPath = path.resolve(
+    fileTypeMap.get(filetype)[0],
+    fileTypeMap.get(filetype)[1]
+  );
+
   writeToFile(targetPath, result);
 }

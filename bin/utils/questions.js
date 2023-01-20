@@ -42,11 +42,11 @@ export const addFile = [
   },
 ];
 
-export const addFileType = [
+export const fileType = [
   {
     type: "list",
-    name: "tool",
+    name: "filetype",
     message: lightGreen("请选择文件的类型:"),
-    choices: ["component", "axios", "redux", "react", "react-ts"],
+    choices: ["component", "page", "axios", "redux"],
   },
 ];

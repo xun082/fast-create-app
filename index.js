@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
-import { answerHandle, createFile } from "./bin/core/index.js";
+import { answerHandle, createFile } from "./bin/index.js";
 import figlet from "figlet";
 import chalk from "chalk";
 
