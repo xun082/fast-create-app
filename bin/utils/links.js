@@ -9,11 +9,12 @@ export const fileTypeTemplate = new Map([
   ["axios", "axios.ejs"],
 ]);
 
-export function fileTypeLinks(filename, suffix) {
+export function fileTypeLinks(suffix, filename = "index.js") {
   return new Map([
     ["component", [`src/components/${filename}`, `index.${suffix}sx`]],
     ["page", [`src/pages/${filename}`, `index.${suffix}sx`]],
     ["redux", [`src/store/modules`, `${filename}.${suffix}s`]],
     ["axios", [`src/services`, `${filename}.${suffix}s`]],
+    ["redux-entry", [`src/modules`, `index.${suffix}s`]],
   ]);
 }

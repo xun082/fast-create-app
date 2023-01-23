@@ -6,7 +6,7 @@ import path from "path";
 import chalk from "chalk";
 
 import { links, fileTypeTemplate, fileTypeLinks } from "./utils/links.js";
-import { loading } from "./utils/index.js";
+import { loading, autoImportReducer } from "./utils/index.js";
 import {
   isRemoveExitMatter,
   questions,
@@ -63,8 +63,9 @@ export async function createFile() {
   });
 
   const suffix = fs.existsSync("tsconfig.json") ? "t" : "j";
-  const fileTypeMap = fileTypeLinks(filename, suffix);
+  const fileTypeMap = fileTypeLinks(suffix, filename);
 
+  // 路径拼接
   const targetPath = path.resolve(
     fileTypeMap.get(filetype)[0],
     fileTypeMap.get(filetype)[1]

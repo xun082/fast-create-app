@@ -27,7 +27,9 @@ export function compile(template, data) {
   });
 }
 
+// 创建文件
 function createDirSync(router) {
+  console.log(router);
   const result = router.slice(process.cwd().length + 1).split("\\");
   let index = ".";
   for (const name of result) {
@@ -43,3 +45,15 @@ export const writeToFile = (path, content) => {
   createDirSync(path);
   return fs.promises.writeFile(path, content);
 };
+
+// 自动导入reducer
+export function autoImportReducer(data, filename) {
+  return data
+    .replace(/^(import)(\s|\S)*from(\s|\.)*('|").*('|"|;)/m, (content) => {
+      return content + `\nimport fs from "fs";`;
+    })
+    .replace(/(?<=(reducer:(\s)*{))(\s|\S)*(?=(},))/, (content) => {
+      if (content === "") return content + `${filename}`;
+      return content + `,${filename}`;
+    });
+}
