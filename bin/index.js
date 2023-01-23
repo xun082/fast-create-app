@@ -70,6 +70,20 @@ export async function createFile() {
     fileTypeMap.get(filetype)[0],
     fileTypeMap.get(filetype)[1]
   );
-
   writeToFile(targetPath, result);
+
+  // 如果是redux且没有全局入口文件入口文件
+  if (filetype === "redux") {
+    const router = path.resolve("src/store", `index.${suffix}s`);
+    if (!fs.existsSync(router)) {
+      const result = await compile("redux-entry.ejs", {
+        isTypescript: suffix === "t" ? true : false,
+      });
+      writeToFile(router, autoImportReducer(result, filename));
+    } else {
+      const data = fs.readFileSync(router, "utf8");
+      writeToFile(router, autoImportReducer(data, filename));
+    }
+  }
+  console.log(chalk.greenBright("文件创建成功"));
 }
