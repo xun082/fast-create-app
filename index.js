@@ -5,9 +5,7 @@ import { answerHandle, createFile } from "./bin/index.js";
 import figlet from "figlet";
 import chalk from "chalk";
 
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
-const { version } = require("./package.json");
+import { version } from "./bin/utils/constant.js";
 
 const program = new Command();
 

@@ -14,6 +14,7 @@ import {
   fileType,
 } from "./utils/questions.js";
 import { compile, writeToFile } from "./utils/index.js";
+import { dependencies } from "./utils/constant.js";
 
 export async function answerHandle(matter) {
   if (fs.existsSync(matter)) {
@@ -83,6 +84,14 @@ export async function createFile() {
     } else {
       const data = fs.readFileSync(router, "utf8");
       writeToFile(router, autoImportReducer(data, filename));
+    }
+
+    if (Object.hasOwn(dependencies, "@reduxjs/toolkit") === false) {
+      console.log(
+        chalk.redBright(
+          `检查到 package.json 文件中缺少  "@reduxjs/toolkit" 依赖,请尽快安装`
+        )
+      );
     }
   }
   console.log(chalk.greenBright("文件创建成功"));
